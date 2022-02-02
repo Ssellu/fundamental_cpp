@@ -37,3 +37,24 @@
 
 출처 https://www.cplusplus.com/doc/tutorial/variables/
 
+
+
+# 문자열
+
+- <**string>** 헤더파일 
+
+  ```c++
+  #include <iostream>
+  #include <string>
+  
+  int main()
+  {
+  	string name = "홍길동"; 
+      
+      std::cout << "name : " << name << std::endl;
+      
+      return 0;
+  }
+  ```
+
+  
