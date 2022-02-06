@@ -170,7 +170,122 @@ int main()
 
 
 
+# 연습문제
 
+다음의 main()이 정상적으로 실행되도록 greet() 함수를 정의하기
+
+```c++
+int main() 
+{
+	greet();  // 고객님, 안녕하세요.
+	greet("김길동");  // 김길동님, 안녕하세요.
+	greet("이길동");  // 이길동님, 안녕하세요.
+	greet("박길동", 25);  // 박길동님, 안녕하세요.
+	greet("최길동", 15);  // 최길동(아)야, 안녕 ?
+	
+	// greet()
+	// 1. 아무것도 넣지 않은 경우 : "고객님, 안녕하세요."를 출력
+	// 2. 문자열 1개(이름)를 넣은 경우 : "XX(문자열)님, 안녕하세요."를 출력
+	// 3. 문자열 1개(이름)와 정수 1개(나이)를 넣은 경우 : 
+	//  1) 나이가 20 살 이상이면 "XX(문자열)님, 안녕하세요."를 출력
+	//  2) 그렇지 않은 경우 "XX(문자열)(아)야, 안녕?"을 출력
+	
+	return 0;
+}
+```
+
+
+
+
+
+
+
+## 답
+
+### 방법1. 
+
+```c++
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void greet()
+{
+	cout << "고객님, 안녕하세요." << endl;
+}
+
+void greet(string name)
+{
+	cout << name << "님, 안녕하세요." << endl;
+}
+
+void greet(string name, int age)
+{
+	if (age >= 20)
+	{
+		cout << name << "님, 안녕하세요." << endl;
+	}
+	else
+	{
+		cout << name << "(아)야, 안녕?" << endl;
+	}
+}
+
+
+int main() 
+{
+	....
+	
+	return 0;
+}
+```
+
+
+
+### 방법2. 같은 내용. 중복된 코드 제거 및 상수 사용
+
+```c++
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// 20을 상수로 선언 (#define 과 같은 표현)
+constexpr auto ADULT_AGE = 20;
+
+// greet(string, int) 가 greet(), greet(string) 보다 밑에 있으므로 함수 선언하기.
+void greet(string name, int age);  
+
+void greet()
+{
+	greet("고객", ADULT_AGE);
+}
+
+void greet(string name)
+{
+	greet(name, ADULT_AGE);
+}
+
+void greet(string name, int age)
+{
+	if (age >= ADULT_AGE)
+	{
+		cout << name << "님, 안녕하세요." << endl;
+	}
+	else
+	{
+		cout << name << "(아)야, 안녕?" << endl;
+	}
+}
+
+int main() 
+{
+	....
+	
+	return 0;
+}
+```
 
 
 

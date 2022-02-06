@@ -87,5 +87,87 @@ int main(){
   | **char*** ??(**double** ?, **int** ?)       | **char**&#42;(*x)(**double**, **int**)  |
   | **int** ?? (**struct A** ?, **sturct B** ?) | **int**(*x)(**struct A**, **struct B**) |
 
-  
+
+
+
+# 연습문제
+
+## 사칙연산 계산기 만들기
+
+1. 덧셈은 1, 뺄셈은 2, 곱셈은 3, 나눗셈은 4를 입력 받는다.
+
+2. 두 정수를 입력 받는다.
+
+3. 함수 포인터를 사용하여 (1)에서 입력받은 값에 따라 다음 5개의 함수 중 1개를 호출한다. 
+
+   만약 (1)번에서 입력 받은 값이 1 ~ 4 외의 정수인 경우 error 함수가 호출되도록 한다.
+
+   인자값은 (2)에서 입력 받은 정수 2개를 사용한다.
+
+   ```c++
+   double add(int x, int y) { return x + y; }
+   double subtract(int x, int y) { return x - y; }
+   double multiply(int x, int y) { return x * y; }
+   double divide(int x, int y) { return (double)x / y; }
+   double error(int x, int y) 
+   {
+   	cout << "잘못된 연산입니다." << endl;
+   	return 0.0;
+   }
+   ```
+
+
+
+## 답
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+double add(int x, int y) { return x + y; }
+double subtract(int x, int y) { return x - y; }
+double multiply(int x, int y) { return x * y; }
+double divide(int x, int y) { return (double)x / y; }
+double error(int x, int y) 
+{
+	cout << "잘못된 연산입니다." << endl;
+	return 0.0;
+}
+int main() 
+{
+	double (*p)(int, int);
+
+	int select;
+	int n1, n2;
+	cout << "(1)덧셈 \n(2)뺄셈 \n(3)곱셈 \n(4)나눗셈 \n입력 : ";
+	cin >> select;
+
+	cout << "두 정수를 입력 하세요. \n입력 : ";
+	cin >> n1 >> n2;
+
+	switch (select)
+	{
+    default:
+		p = error;
+        break;
+	case 1:
+		p = add;
+		break;
+	case 2:
+		p = subtract;
+		break;
+	case 3:
+		p = multiply;
+		break;
+	case 4:
+		p = divide;
+		break;
+	}
+
+	cout << "결과 : " << p(n1, n2) << endl;
+
+	return 0;
+}
+```
 
