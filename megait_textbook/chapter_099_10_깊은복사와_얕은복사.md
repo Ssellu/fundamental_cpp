@@ -35,12 +35,12 @@ int main(){
 ```
 
 > name : 홍길동
+>
 > age : 10
+>
 > name : 홍길동
+>
 > age : 10
+>
 > Press any key to continue . . .
-
-
-
-# 얕은 복사 주의사항
 

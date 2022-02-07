@@ -128,14 +128,23 @@ int main()
 ```
 
 > Person 생성자 호출!!
+>
 > Person 생성자 호출!!
+>
 > Person 생성자 호출!!
+>
 > name : Jane Doe
+>
 > age : 20
+>
 > name : John Doe
+>
 > age : 0
+>
 > name :
+>
 > age : 0
+>
 > Press any key to continue . . .
 
 
