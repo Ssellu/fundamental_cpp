@@ -42,11 +42,17 @@ int main()
 ```
 
 > this : 00D8FDE8
+>
 > name : 홍길동
+>
 > age : 10
+>
 > this : 00D8FDC0
+>
 > name : 고길동
+>
 > age : 20
+>
 > Press any key to continue . . .
 
 
@@ -71,13 +77,21 @@ int main()
 ```
 
 > this : 0122B3A0
+>
 > name : 홍길동
+>
 > age : 10
+>
 > this : 0122B210
+>
 > name : 고길동
+>
 > age : 20
+>
 > p1 : 0122B3A0
+>
 > p2 : 0122B210
+>
 > Press any key to continue . . .
 
 

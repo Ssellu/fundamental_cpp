@@ -202,9 +202,13 @@ Person(const string& name = "", const int& age = 0) {
    ```
 
    > name : John Doe
+   >
    > age : 20
+   >
    > name :
+   >
    > age : -858993460
+   >
    > Press any key to continue . . .
 
    ```c++
@@ -261,8 +265,7 @@ class Person
 public:
 
 	Person()
-        
-		: m_name{"X"}, m_age{-1}, m_scores{100, 100, 100}  // 이 부분!
+        : m_name{"X"}, m_age{-1}, m_scores{100, 100, 100}  // 이 부분!
 	{
 		cout << "Person 생성자 호출!! " << endl;
 	}
@@ -291,17 +294,29 @@ int main()
 ```
 
 > Person 생성자 호출!!
+>
 > Person 생성자 호출!!
+>
 > name : X
+>
 > age : -1
+>
 > Korean : 100
+>
 > English : 100
+>
 > Math : 100
+>
 > name : X
+>
 > age : -1
+>
 > Korean : 100
+>
 > English : 100
+>
 > Math : 100
+>
 > Press any key to continue . . .
 
 
@@ -355,4 +370,74 @@ int main()
 	return 0;
 }
 ```
+
+
+
+# 위임생성자
+
+- 생성자 내부에서 다른 생성자를 호출
+
+  ```c++
+  #include <iostream>
+  #include <string>
+  using namespace std;
+  
+  class Person
+  {
+  private:
+  	string m_name;
+  	int m_age;
+  
+  public:
+  	Person(string name, int age)
+  		: m_name(name), m_age(age)
+  	{}
+  
+  	Person(string name)
+  		:Person(name, 0)  // 위임생성자 호출
+  	{}
+  
+  	Person(int age)
+  		:Person("", age)  // 위임생성자 호출
+  	{}
+  
+  	void printInfo()
+  	{
+  		cout << "이름 : " << m_name << endl;
+  		cout << "나이 : " << m_age << endl;
+  	}
+  };
+  
+  int main()
+  {
+  	Person people[] = {
+  		Person{ "홍길동" }  // 이름만
+  		,Person{ 20 }  // 나이만
+  		,Person{ "고길동", 10 }  // 이름과 나이만
+  	};
+  
+  	for (auto& person : people)
+  	{
+  		person.printInfo();
+  	}
+  
+  	return 0;
+  }
+  ```
+
+  > 이름 : 홍길동
+  >
+  > 나이 : 0
+  >
+  > 이름 :
+  >
+  > 나이 : 20
+  >
+  > 이름 : 고길동
+  >
+  > 나이 : 10
+  >
+  > Press any key to continue . . .
+
+
 
