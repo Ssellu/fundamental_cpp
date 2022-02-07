@@ -36,9 +36,13 @@ int main(){
 ```
 
 > name : John Doe
+>
 > age : 20
+>
 > name : Jane Doe
+>
 > age : 32
+>
 > Press any key to continue . . .
 
 
