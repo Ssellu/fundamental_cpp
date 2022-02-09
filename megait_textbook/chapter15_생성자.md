@@ -450,3 +450,270 @@ int main()
 
 
 
+# 깊은 복사(deep copy)와 얕은 복사(shallow copy)
+
+- 얕은 복사 : 주소만 복사
+- 깊은 복사 : 객체의 멤버변수까지 모두 복사
+
+## 얕은 복사의 예
+
+```c++
+#include <iostream>
+#include <string> 
+
+using namespace std;
+
+class Person
+{
+public:
+	string name;
+	int age;
+	//Person() {}
+	Person(string n, int a) :name(n), age(a)
+	{
+	}
+	Person(const Person& origin)
+	{
+		cout << "복사 생성자 실행!" << endl;
+		name = origin.name;
+		age = origin.age;
+	}
+
+	void printInfo()
+	{
+		cout << "name : " << name << endl;
+		cout << "age : " << age << endl;
+	}
+
+};
+int main() {
+	
+	Person p1{"김길동", 10};
+
+	Person* p2 = &p1;  // 얕은 복사
+
+	p2->name = "홍길동";
+	p2->age = 20;
+
+	cout << "p2에 p1 얕은 복사 후" << endl;
+
+	p1.printInfo();  // 홍길동 20
+	p2->printInfo(); // 홍길동 20
+
+	Person& p3 = p1;  // 얕은 복사
+
+	p3.name = "최길동";
+	p3.age = 30;
+
+	cout << "p3에 p1 얕은 복사 후" << endl;
+
+	p1.printInfo();  // 최길동 30
+	p2->printInfo(); // 최길동 30
+	p3.printInfo();  // 최길동 30
+
+
+	return 0;
+}
+```
+
+> p2에 p1 얕은 복사 후
+>
+> name : 홍길동
+>
+> age : 20
+>
+> name : 홍길동
+>
+> age : 20
+>
+> p3에 p1 얕은 복사 후
+>
+> name : 최길동
+>
+> age : 30
+>
+> name : 최길동
+>
+> age : 30
+>
+> name : 최길동
+>
+> age : 30
+>
+> Press any key to continue . . .
+
+
+
+특히, new 로 생성되는 객체는 포인터로 접근되기 때문에 얕은 복사에 유의해야 한다.
+
+```c++
+int main() {
+	
+	Person* p1 = new Person{ "홍길동", 10 };
+	Person* p2 = p1;
+
+	p2->name = "김길동"; 
+
+	p1->printInfo();
+	p2->printInfo();
+
+	return 0;
+}
+```
+
+> name : 김길동
+>
+> age : 10
+>
+> name : 김길동
+>
+> age : 10
+>
+> Press any key to continue . . .
+
+
+
+## 깊은 복사의 예
+
+- 새 객체를 만들어 원본 객체의 '내용'을 복사한다.
+
+```c++
+int main() {
+	
+	Person* p1 = new Person{ "홍길동", 10 };
+	Person* p2 = new Person; // 새 객체를 만든 후..
+
+	p2->name = p1->name; // 내용 복사
+	p2->age = p1->age;   // 내용 복사
+
+	p2->name = "김길동"; // p2의 name을 변경해도
+
+	p1->printInfo();  // 홍길동 10  ~> 원본 객체에는 영향을 주지 않는다. 
+	p2->printInfo();  // 김길동 10
+
+	return 0;
+}
+```
+
+
+
+# 복사생성자
+
+그렇다면 다음은 어떻게 동작할까?
+
+```c++
+int main(){
+    Person p1{ "홍길동", 10 };
+    Person p2{ p1 }; // 이렇게 하거나
+    Person p3 = p1; // 이렇게 하는 경우?
+}
+```
+
+이런 경우 c++ 에서는 '깊은 복사'가 실행된다. 
+
+깊은 복사를 실행하기 위해 모든 클래스는 다음과 같은 **복사 생성자**가 자동으로 정의된다.
+
+```c++
+// 복사 생성자 형식
+클래스명(const 클래스명& origin)
+{
+    멤버변수1 = origin.멤버변수1;
+    멤버변수2 = origin.멤버변수2;
+    멤버변수3 = origin.멤버변수3;
+    ...
+}
+```
+
+이러한 경우에도 복사 생성자가 자동으로 호출된다.
+
+```c++
+void showOlder(Person per1, Person per2)
+{
+    ....
+}
+```
+
+```c++
+showOlder(p1, p2); // p1은 매개변수 per1에, p2는 매개변수 per2에. 각 인자값에 대한 깊은 복사가 진행되도록 복사생성자가 호출된다.
+```
+
+그래서 매개변수 자료형을 일반타입이 아닌 const 참조타입으로 선언 하는 것이다!
+
+```c++
+// 올바른 객체 참조 
+void showOlder(const Person& per1, const Person& per2) // 이러면 깊은 복사가 아닌 얕은 복사가 진행된다.
+{
+    ....
+}
+```
+
+
+
+## 복사생성자 예제
+
+```c++
+#include <iostream>
+#include <string> 
+
+using namespace std;
+
+class Person
+{
+public:
+	string name;
+	int age;
+
+	// 복사 생성자
+	Person(const Person& origin)
+	{
+		cout << "복사 생성자 실행!" << endl;
+		name = origin.name;
+		age = origin.age;
+	}
+	
+    // 주의! 복사생성자도 생성자이므로, 복사생성자를 정의하면 기본 생성자는 정의되지 않는다. 
+    // (생성자를 1개라도 정의해버리면 기본 생성자는 만들어지지 않는다는 것을 잊지말자.)
+	//  Person p{"XXX", 00} <- 이거 하고 싶다면 생성자를 추가로 정의해야한다.
+	Person(string n="", int a=0) 
+		:name(n), age(a)
+	{}
+    
+	void printInfo()
+	{
+		cout << "name : " << name << endl;
+		cout << "age : " << age << endl;
+	}
+
+};
+int main() {
+	
+	Person p1{ "홍길동", 10 };
+	Person p2{ p1 };  // p2의 복사 생성자 실행 
+
+	cout << "!!!!!!!!!!!!!!!" << endl;
+
+	p1.printInfo();
+	p2.printInfo();
+
+	return 0;
+}
+```
+
+> [결과]
+>
+> 복사 생성자 실행!
+>
+> !!!!!!!!!!!!!!!
+>
+> name : 홍길동
+>
+> age : 10
+>
+> name : 홍길동
+>
+> age : 10
+>
+> Press any key to continue . . .
+
+
+
