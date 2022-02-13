@@ -309,3 +309,131 @@ int main()
 1. 코드의 재사용 
 2. 그룹화(가족화) ~> 자료형 통일 ~> 같은 가족끼리는 사용 방법 (멤버함수) 통일
 3. 다형성
+
+
+
+
+
+# 상속 받은 멤버의 접근지정자 바꾸기
+
+```c++
+#include <iostream>
+#include <string> 
+using namespace std;
+class Parent
+{
+protected:
+	int x;
+
+public:
+	void doSomething() {}
+};
+
+class Child : public Parent
+{
+public:
+	using Parent::x;  // protected인 x를 public 으로 바꾸기
+
+private:
+	using Parent::doSomething; // public인 doSomething을 private 으로 바꾸기( 괄호 X )
+};
+
+int main() {
+
+	Child c; 
+	c.x = 10;
+	cout << c.x << endl;
+	
+	c.doSomething(); // 에러
+	return 0;
+}
+```
+
+단, 부모의 private 멤버는 변경 불가. 
+
+
+
+# 다중 상속
+
+- 다중 상속 : 하나의 클래스가 여러 부모 클래스를 상속 받는 것.
+
+- C++은 다중 상속을 지원함.
+- 복잡한 상속 관계인 경우는 다중 상속은 문제가 많기 때문에 사용 자제.
+
+```c++
+class ParentA
+{
+};
+
+class ParentB
+{
+};
+
+class Child : public ParentA, public ParentB // 이 부분
+{
+};
+```
+
+
+
+## 다중 상속 문제점
+
+1. 멤버 충돌의 가능성. 부모끼리 같은 이름의 멤버가 있을 수 있음. 
+
+```c++
+class ParentA
+{
+	void doSomething() {}
+};
+
+class ParentB
+{
+	void doSomething() {}
+};
+
+class Child : public ParentA, public ParentB // 이 부분
+{
+};
+
+int main() {
+
+	Child c; 
+	c.doSomething();  // 에러! 
+	return 0;
+}
+```
+
+
+
+2. 하나의 클래스를 간접적으로 두 번 이상 상속받을 가능성.
+
+```c++
+#include <iostream>
+#include <string> 
+using namespace std;
+class GrandParent {
+public:
+	int x;
+};
+class ParentA : public GrandParent
+{
+};
+
+class ParentB : public GrandParent
+{
+};
+
+class Child : public ParentA, public ParentB // 이 부분
+{
+};
+
+int main() {
+
+	Child c; 
+	c.x = 0;  // 에러
+	return 0;
+}
+```
+
+
+
