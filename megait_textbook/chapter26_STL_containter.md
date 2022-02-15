@@ -212,5 +212,348 @@ deque를 사용하여 다음과 같은 순서의 원소를 저장하여 출력�
 
 <hr/>
 
+# 연관 컨테이너
 
+
+
+## std::set 과 std::multiset
+
+- 집합(set) 컨테이너는 저장하는 데이터 그 자체를 키로 사용하는 가장 단순한 연관 컨테이너.
+- 이 컨테이너는 벡터와 달리 오름차순으로 정렬된 위치에 요소를 삽입하므로 검색 속도가 매우 빠름.
+- 키의 중복을 허용하지 않는다.
+- 하지만 멀티집합(multiset)은 키의 중복을 허용하므로, 같은 값을 여러 번 저장할 수 있음.
+- 이 두 컨테이너는 모두 `set.h`에 들어있음.
+
+```c++
+#include <iostream>
+#include <set>
+using namespace std;
+void ex01() {
+	set<int> s;
+
+	cout << "----- checkout 1 -----" << endl;
+	s.insert(10);
+	s.insert(5);
+	s.insert(1);
+	s.insert(20);
+	s.insert(5); // 5 중복
+	s.insert(5); // 5 중복
+	s.insert(5); // 5 중복
+	for (auto& e : s)
+	{
+		cout << e << endl; // 오름차순 정렬을 지원함
+	}
+
+
+	cout << "----- checkout 2 -----" << endl;
+	s.erase(5);
+	s.erase(1);
+	for (auto& e : s)
+	{
+		cout << e << endl; // 오름차순 정렬을 지원함
+	}
+}
+
+void ex02() {
+	multiset<int> s;
+
+	cout << "----- checkout 1 -----" << endl;
+	s.insert(10);
+	s.insert(5);
+	s.insert(1);
+	s.insert(20);
+	s.insert(5); // 5 중복
+	s.insert(5); // 5 중복
+	s.insert(5); // 5 중복
+	for (auto& e : s)
+	{
+		cout << e << endl; // 오름차순 정렬을 지원함
+	}
+
+
+	cout << "----- checkout 2 -----" << endl;
+	s.erase(5);
+	s.erase(1);
+	for (auto& e : s)
+	{
+		cout << e << endl; // 오름차순 정렬을 지원함
+	}
+}
+int main()
+{
+	cout << "========= set =========" << endl;
+	ex01();
+	cout << "========= multiset =========" << endl;
+	ex02();
+	
+	return 0;
+}
+```
+
+
+
+## 문제 - 로또 추첨기
+
+1 이상 ~ 45 이하 사이의 정수 중 '중복 없이' '오름차순'으로 6개의 숫자를 추출하여 출력하기
+
+랜덤 수 생성은 다음 코드를 참고
+
+```c++
+#include <iostream>
+#include <set>
+#include <cstdlib>  // std::rand(), std::srand()
+#include <ctime>  // std::time()
+using namespace std;
+
+int main()
+{
+	int n;
+
+	srand(time(NULL)); // seed 값 설정 (seed : 난수 생성에 필요한 초기값. 시간 데이터를 seed 로 활용(매번 바뀌게))
+	
+	for (int i = 0; i < 10; ++i)
+	{
+		// 난수 생성 범위 : 2 ~ 4
+		n = rand() % 3 + 2; // 2에서 3개의 숫자 중 하나를 뽑아 n에 저장(2, 3, 4)
+		cout << n << endl;
+	}
+
+	
+	return 0;
+}
+```
+
+
+
+## 답
+
+```c++
+#include <iostream>
+#include <set>
+#include <cstdlib> 
+#include <ctime> 
+#include <set>
+using namespace std;
+
+int main()
+{
+	set<int> lotto;
+	srand(time(NULL)); 
+	
+	while (lotto.size() < 6)
+	{
+		lotto.insert(rand() % 45 + 1);
+	}
+
+	for (auto& e : lotto)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
+
+	return 0;
+}
+```
+
+
+
+## std::map 과 std::multimap
+
+- 맵(map) 컨테이너는 `키 - 값`의 쌍으로 데이터를 저장 및 관리.
+- 키를 기준으로 오름차순의 정렬된 위치에 저장하므로 검색 속도가 매우 빠름. 
+- 맵(map)은 키의 중복을 허용하지 않음.
+- 멀티맵(multimap)은 값의 중복을 허용함. 하나의 키가 여러 개의 값과 연결될 수 있음.
+- 모두 `map.h` 에 들어있음.
+
+```c++
+#include <iostream>
+#include <map>
+using namespace std;
+void ex01() {
+	//map<char, int> m;
+	map<char, int> m{pair<char, int>('a', 10), pair<char, int>('b', 20), pair<char, int>('c', 30)};
+
+	cout << "----- checkout 1 -----" << endl;
+	
+	// 원소 추가 방법1. - [] 기호 사용 (배열처럼 쓰기)
+	m['x'] = 100;
+	m['y'] = 200;
+	m['z'] = 300; 
+	m['z'] = 350; // z 중복
+	m['z'] = 400; // z 중복
+
+	// 원소 추가 방법2. - pair 클래스 사용
+	m.insert(pair<char, int>('i', 111));
+
+	for (auto& e : m)
+	{
+		cout << e.first << " : " << e.second << endl;
+		// first : 키
+		// second : 값
+	}
+
+
+	cout << "----- checkout 2 -----" << endl;
+
+	// 원소 삭제
+	m.erase('i');
+	for (auto& e : m)
+	{
+		cout << e.first << " : " << e.second << endl;
+	}
+
+	cout << "----- checkout 3 -----" << endl;
+
+	// value 조회 (키가 없다면 false(=0) 을 출력)
+	int elem = m['y'];
+	cout << elem << endl;
+
+}
+
+void ex02() {
+	multimap<char, int> m;
+	
+	cout << "----- checkout 1 -----" << endl;
+	m.insert(pair<char, int>('x', 100));
+	m.insert(pair<char, int>('y', 200));
+	m.insert(pair<char, int>('z', 200));
+	m.insert(pair<char, int>('z', 250));  // 중복
+	m.insert(pair<char, int>('z', 300));  // 중복
+
+	for (auto& e : m)
+	{
+		cout << e.first << " : " << e.second << endl;
+	}
+
+
+	cout << "----- checkout 2 -----" << endl;
+
+	// 원소 삭제
+	m.erase('y');
+	for (auto& e : m)
+	{
+		cout << e.first << " : " << e.second << endl;
+	}
+
+	cout << "----- checkout 3 -----" << endl;
+
+	// multimap의 원소 조회 (value가 여러 개 일 수 있기때문에 이터레이터를 사용하여 반복 처리 실행)
+	multimap<char, int>::iterator iter;
+	for (iter = m.equal_range('z').first; iter != m.equal_range('z').second; iter++) {
+		cout << "키 : " << iter->first << endl;
+		cout << "값 : " << iter->second << endl;
+	}
+}
+int main()
+{
+	cout << "========= map =========" << endl;
+	ex01();
+	cout << "========= multimap =========" << endl;
+	ex02();
+
+	return 0;
+}
+```
+
+
+
+# 컨테이너 어댑터
+
+
+
+
+
+## std::stack
+
+- 선형의 후입선출(LIFO) 자료 구조.
+  - LIFO : 가장 나중에 저장된(push) 데이터가 가장 먼저 인출(pop)되는 구조.
+- `stack.h`에 들어있음
+
+| 멤버 함수 |                             설명                             |
+| :-------: | :----------------------------------------------------------: |
+|  empty()  | 스택이 비어 있으면 true를, 비어 있지 않으면 false를 반환함.  |
+|  size()   |                스택 요소의 총 개수를 반환함.                 |
+|   top()   | 스택의 제일 상단에 있는(제일 마지막으로 저장된) 요소에 대한 참조를 반환함. |
+|  push()   |              스택의 제일 상단에 요소를 삽입함.               |
+|   pop()   |            스택의 제일 상단에 있는 요소를 삭제함.            |
+
+ ```c++
+ #include <iostream>
+ #include <string>
+ #include <stack>  // std::stack
+ using namespace std;
+ 
+ int main()
+ {
+ 	stack<int> s;
+ 	int t;
+ 	cout << "------ check point 1 ------" << endl;
+ 	s.push(10);
+ 	s.push(20);
+ 	s.push(30);
+ 	s.push(40);
+ 	t = s.top();
+ 	cout << "top : " << t << endl;
+ 
+ 	cout << "------ check point 2 ------" << endl;
+ 	s.pop();
+ 	s.pop();
+ 	t = s.top();
+ 	cout << "top : " << t << endl;
+ 
+ 	cout << "------ check point 3 ------" << endl;
+ 	s.push(100);
+ 	s.push(200);
+ 	t = s.top();
+ 	cout << "top : " << t << endl;
+ 	return 0;
+ }
+ ```
+
+
+
+## std::queue
+
+- 선형의 후입선출(FIFO) 자료 구조.
+  - FIFO : 가장 먼저 저장된(push) 데이터가 가장 먼저 인출(pop)되는 구조.
+- `stack.h`에 들어있음
+
+| 멤버 함수 |                             설명                             |
+| :-------: | :----------------------------------------------------------: |
+|  empty()  |  큐가 비어 있으면 true를, 비어 있지 않으면 false를 반환함.   |
+|  size()   |                 큐 요소의 총 개수를 반환함.                  |
+|  front()  | 큐의 맨 앞에 있는(제일 먼저 저장된) 요소에 대한 참조를 반환함. |
+|  back()   | 큐의 맨 뒤에 있는(제일 나중에 저장된) 요소에 대한 참조를 반환함. |
+|  push()   |                 큐의 맨 뒤에 요소를 삽입함.                  |
+|   pop()   |                 큐의 맨 앞의 요소를 삭제함.                  |
+
+```c++
+#include <iostream>
+#include <string>
+#include <queue>  // std::queue
+using namespace std;
+
+int main()
+{
+	queue<int> q;
+	int t;
+	cout << "------ check point 1 ------" << endl;
+	q.push(10);
+	q.push(20);
+	q.push(30);
+	q.push(40);
+	cout << "front : " << q.front() << ", back : " << q.back() << endl;
+
+	cout << "------ check point 2 ------" << endl;
+	q.pop();
+	q.pop();
+	cout << "front : " << q.front() << ", back : " << q.back() << endl;
+
+	cout << "------ check point 3 ------" << endl;
+	q.push(100);
+	q.push(200);
+	cout << "front : " << q.front() << ", back : " << q.back() << endl;
+	return 0;
+}
+```
 
